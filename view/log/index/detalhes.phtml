@@ -1,0 +1,53 @@
+<div class="page-header">
+    <h1>Log de atividade<?php $this->headTitle('Detalhes');
+$this->headTitle('Log');
+?> <small>detalhes</small></h1>
+</div>
+
+<table class="table table-bordered">
+    <tr><th colspan="2">Detalhes do Log</th></tr>
+    <tr><th>Log Id</th><td><?php echo $this->registro->getId(); ?></td></tr>
+    <tr><th>Usuário</th><td><?php echo $this->registro->getUsuario(); ?></td></tr>
+    <tr><th>Data</th><td><?php echo $this->registro->getDataHora()->format('d/m/Y H:i:s'); ?></td></tr>
+    <tr><th>Entity</th><td><?php echo $this->registro->getEntity(); ?></td></tr>
+    <tr><th>Ação</th><td><?php echo $this->registro->getAcao(); ?></td></tr>
+    <?php if ($this->registro->getRegistroId()): ?>
+        <tr><th>Registro Id</th><td><?php echo $this->registro->getRegistroId(); ?></td></tr>
+    <?php endif; ?>
+</table>
+
+<?php $arrayFormularioRecebido = json_decode($this->registro->getFormularioRecebido(), true);
+if (count($arrayFormularioRecebido) > 0):
+    ?>
+    <table class="table table-bordered">
+        <tr><th colspan="2">Fomulário Recebido</th></tr>
+        <?php foreach ($arrayFormularioRecebido as $chave => $valor): ?>
+            <tr class="<?php echo $class; ?>"><th><?php echo $chave; ?></th><td><?php echo strip_tags($valor); ?></td></tr>
+        <?php endforeach; ?>
+    </table>
+<?php endif; ?>
+
+<?php $arrayAntigo = json_decode($this->registro->getRegistroAntigo(), true);
+if (count($arrayAntigo) > 0):
+    ?>
+    <table class="table table-bordered">
+        <tr><th collapse="2">Registro Antigo</th></tr>
+        <?php foreach ($arrayAntigo as $chave => $valor): ?>
+            <tr><th><?php echo $chave; ?></th><td><?php echo $valor; ?></td></tr>
+        <?php endforeach; ?>
+    </table>
+<?php endif; ?>
+
+<?php $arrayNovo = json_decode($this->registro->getRegistroNovo(), true);
+if (count($arrayNovo) > 0):
+    ?>
+    <table class="table table-bordered">
+        <tr><th colspan="2">Registro Novo</th></tr>
+        <?php
+        foreach ($arrayNovo as $chave => $valor):
+            $class = ($arrayNovo[$chave] != $arrayAntigo[$chave] && count($arrayAntigo) > 0) ? 'danger':'';
+            ?>
+            <tr class="<?php echo $class; ?>"><th><?php echo $chave; ?></th><td><?php echo strip_tags($valor); ?></td></tr>
+        <?php endforeach; ?>
+    </table>
+<?php endif; ?>
